@@ -1,6 +1,5 @@
 package com.ucam.springboot.stay_keto_spring_boot.entities;
 
-import com.ucam.springboot.stay_keto_spring_boot.persistance.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
