@@ -1,28 +1,56 @@
 package com.ucam.springboot.stay_keto_spring_boot.controllers;
 
 
+import com.ucam.springboot.stay_keto_spring_boot.entities.FoodItem;
+import com.ucam.springboot.stay_keto_spring_boot.repositories.FoodItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import com.ucam.springboot.stay_keto_spring_boot.services.FoodItemService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:5174")
+
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/food")
 public class FoodItemController {
 
-    @GetMapping(value = "/list", produces = "application/json")
-    public String getFoodList() {
-        // Aquí deberías retornar una lista real desde un servicio o base de datos
-        return "[\"Eggs\", \"Bacon\", \"Avocado\"]";
+    private final FoodItemService foodItemService;
+
+    public FoodItemController(FoodItemService foodItemService) {
+        this.foodItemService = foodItemService;
+    }
+
+    @GetMapping(value = "/list")
+    public List<FoodItem> getAllFoodItem() {
+        return foodItemService.getAllFoodItems();
+    }
+
+    @Autowired
+    private FoodItemRepository foodItemRepository;
+
+    @GetMapping
+    public List<FoodItem> getAllFoodItems() {
+        return foodItemRepository.findAll();
+
+    }
+
+    @GetMapping("/searchByID")
+    public ResponseEntity<FoodItem> getFoodItemById(@RequestParam Long id) {
+        Optional<FoodItem> foodItem = foodItemRepository.findById(id);
+        return foodItem.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/searchByName")
+    public ResponseEntity<FoodItem> getFoodItemByName(@RequestParam String name) {
+        Optional<FoodItem> foodItem = foodItemRepository.findByNameIgnoreCase(name);
+        return foodItem.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
 
-//@RestController
-//@RequestMapping("/api")
-//public class HelloController {
-//
-//    @GetMapping("/prueba")
-//    public String hello() {
-//        return "Hello!";
-//    }
-//}

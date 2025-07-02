@@ -10,6 +10,9 @@ import lombok.Data;
 @Entity
 public class FoodItem {
 
+    public FoodItem() {
+
+    }
     public FoodItem(Long id, String name) {
         this.id = id;
         this.name = name;
