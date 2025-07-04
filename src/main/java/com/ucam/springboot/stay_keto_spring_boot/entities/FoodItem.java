@@ -22,17 +22,14 @@ public class FoodItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-    private String name;
-    private String foodCalories;
     private Boolean isKeto;
+    private int unit;
+    private String unitType;
+    private String name;
+    private int Calories;
+    private int fat;
+    private int proteins;
 
-    @Override
-    public String toString() {
-        return "FoodItem{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", foodCalories='" + foodCalories + '\'' +
-                ", isKeto=" + isKeto +
-                '}';
-    }
+
+
 }

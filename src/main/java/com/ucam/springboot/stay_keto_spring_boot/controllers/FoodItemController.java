@@ -45,11 +45,21 @@ public class FoodItemController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/searchByName")
+    @GetMapping("/searchExactByName")
     public ResponseEntity<FoodItem> getFoodItemByName(@RequestParam String name) {
         Optional<FoodItem> foodItem = foodItemRepository.findByNameIgnoreCase(name);
         return foodItem.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/searchByName")
+    public ResponseEntity<List<FoodItem>> searchFoodItems(@RequestParam String name) {
+        List<FoodItem> results = foodItemRepository.findByNameContainingIgnoreCase(name);
+        if (results.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(results);
+        }
     }
 
 }
