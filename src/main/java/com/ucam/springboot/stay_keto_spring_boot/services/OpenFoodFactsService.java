@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +27,7 @@ public class OpenFoodFactsService {
      * Importar productos por palabra clave (ej: "queso")
      */
     public int importProducts(String keyword) {
-        String url = "https://world.openfoodfacts.org/cgi/search.pl?search_terms="
-                + keyword + "&search_simple=1&action=process&json=1";
+        String url = "https://world.openfoodfacts.org/cgi/search.pl?search_terms=" + keyword + "&search_simple=1&action=process&json=1&lc=es";
 
         ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
         List<Map<String, Object>> products = (List<Map<String, Object>>) response.getBody().get("products");
@@ -44,8 +44,7 @@ public class OpenFoodFactsService {
         int maxPerPage = 1000;
 
         while (true) {
-            String url = "https://world.openfoodfacts.org/cgi/search.pl?action=process&json=1&page="
-                    + page + "&page_size=" + maxPerPage;
+            String url = "https://world.openfoodfacts.org/cgi/search.pl?action=process&json=1&lc=es&page=" + page + "&page_size=" + maxPerPage;
 
             System.out.println("Descargando página " + page + "...");
 
@@ -65,10 +64,10 @@ public class OpenFoodFactsService {
             page++;
 
             // Seguridad: no pasar de 200 páginas (~200.000 productos)
-            if (page > 200) {
-                System.out.println("Límite de seguridad alcanzado. Deteniendo importación.");
-                break;
-            }
+//            if (page > 200) {
+//                System.out.println("Límite de seguridad alcanzado. Deteniendo importación.");
+//                break;
+//            }
 
             // (Opcional) Pausa para no saturar el servidor
             try {
@@ -86,46 +85,46 @@ public class OpenFoodFactsService {
      */
     private int saveProducts(List<Map<String, Object>> products) {
         int count = 0;
+        List<FoodItem> itemsToSave = new ArrayList<>();
 
         for (Map<String, Object> product : products) {
             try {
-                String productName = (String) product.get("product_name");
+                String productName = (String) product.getOrDefault("product_name_es", product.get("product_name"));
+                if (productName == null || productName.trim().isEmpty()) continue;
+
                 Map<String, Object> nutriments = (Map<String, Object>) product.get("nutriments");
 
-                // Validaciones básicas
-                if (productName == null || productName.trim().isEmpty()) continue;
-                if (nutriments == null) continue;
+                Double carbs = castDouble(nutriments != null ? nutriments.get("carbohydrates_100g") : null);
+                Double calories = castDouble(nutriments != null ? nutriments.get("energy-kcal_100g") : null);
 
-                Double carbs = castDouble(nutriments.get("carbohydrates_100g"));
-                Double calories = castDouble(nutriments.get("energy-kcal_100g"));
-
-                if ((carbs == null || carbs == 0) && (calories == null || calories == 0)) continue;
+                if (carbs == null && calories == null) continue;
 
                 FoodItem item = new FoodItem();
                 item.setName(productName);
                 item.setTitle((String) product.get("brands"));
                 item.setPhoto((String) product.get("image_front_url"));
                 item.setQuantity((String) product.get("quantity"));
-                item.setCommonName((String) product.get("generic_name"));
+                item.setCommonName((String) product.getOrDefault("generic_name_es", product.get("generic_name")));
 
                 item.setFat(castDouble(nutriments.get("fat_100g")));
                 item.setCarbohydrates(carbs);
                 item.setProteins(castDouble(nutriments.get("proteins_100g")));
                 item.setCalories(calories);
-
                 item.setIsKeto(carbs != null && carbs < 5.0);
 
-                foodItemRepository.save(item);
-                count++;
-
+                itemsToSave.add(item);
             } catch (Exception e) {
                 System.out.println("Error guardando producto: " + e.getMessage());
             }
         }
 
+        // Guardado en lote
+        foodItemRepository.saveAll(itemsToSave);
+        count = itemsToSave.size();
+
+        System.out.println("Guardados en lote: " + count + " productos.");
         return count;
     }
-
     /**
      * Convierte un valor a Double, sea número o string.
      */
