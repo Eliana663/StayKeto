@@ -22,14 +22,16 @@ public class FoodItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-    private Boolean isKeto;
-    private int unit;
-    private String unitType;
     private String name;
-    private int Calories;
-    private int fat;
-    private int proteins;
-
+    private String title;
+    private String commonName;
+    private String photo;
+    private String quantity;
+    private Double carbohydrates;
+    private Double calories;
+    private Double fat;
+    private Double proteins;
+    private Boolean isKeto;
 
 
 }
