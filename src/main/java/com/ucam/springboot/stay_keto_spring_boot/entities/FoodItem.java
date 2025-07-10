@@ -23,10 +23,7 @@ public class FoodItem {
 
     private Long id;
     private String name;
-    private String title;
-    private String commonName;
     private String photo;
-    private String quantity;
     private Double carbohydrates;
     private Double calories;
     private Double fat;

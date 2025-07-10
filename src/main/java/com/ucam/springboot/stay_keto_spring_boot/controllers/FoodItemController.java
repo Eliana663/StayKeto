@@ -3,7 +3,6 @@ package com.ucam.springboot.stay_keto_spring_boot.controllers;
 
 import com.ucam.springboot.stay_keto_spring_boot.entities.FoodItem;
 import com.ucam.springboot.stay_keto_spring_boot.repositories.FoodItemRepository;
-import com.ucam.springboot.stay_keto_spring_boot.services.OpenFoodFactsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
