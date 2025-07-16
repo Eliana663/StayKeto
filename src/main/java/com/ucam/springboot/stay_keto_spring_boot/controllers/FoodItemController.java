@@ -1,6 +1,7 @@
 package com.ucam.springboot.stay_keto_spring_boot.controllers;
 
 
+
 import com.ucam.springboot.stay_keto_spring_boot.entities.FoodItem;
 import com.ucam.springboot.stay_keto_spring_boot.repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,12 @@ public class FoodItemController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FoodItem> getFoodById(@PathVariable Long id) {
+        Optional<FoodItem> optional = foodItemRepository.findById(id);
+        return optional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 }
 

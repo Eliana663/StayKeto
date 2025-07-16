@@ -1,9 +1,9 @@
 package com.ucam.springboot.stay_keto_spring_boot.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -23,12 +23,34 @@ public class FoodItem {
 
     private Long id;
     private String name;
-    private String photo;
+    private String shortName;
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private FoodImage image;
     private Double carbohydrates;
     private Double calories;
     private Double fat;
     private Double proteins;
     private Boolean isKeto;
 
+    public Long getImageId() {
+        return image != null ? image.getId() : null;
+    }
+    @Transient
+    @JsonProperty("image_url")
+    public String getImageUrl() {
+        if (image == null || image.getImageUrl() == null) return null;
 
-}
+        String filename = image.getImageUrl(); // Ej: "images/Leche.jpg"
+
+        // Asegúrate que filename no incluya el dominio, solo la ruta relativa
+        if (filename.startsWith("http")) {
+            // Si ya tiene dominio, no agregar nada
+            return filename;
+        } else {
+            return "http://localhost:8081/" + filename;
+        }
+    }
+    }
