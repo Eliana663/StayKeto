@@ -46,14 +46,8 @@ public class FoodItemController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/searchExactByName")
-    public ResponseEntity<FoodItem> getFoodItemByName(@RequestParam String name) {
-        Optional<FoodItem> foodItem = foodItemRepository.findByNameIgnoreCase(name);
-        return foodItem.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
 
-    @GetMapping("/searchByName")
+    @GetMapping("/searchByName") // Implemented in FoodSearch component react
     public ResponseEntity<List<FoodItem>> searchFoodItems(@RequestParam String name) {
         List<FoodItem> results = foodItemRepository.findByNameContainingIgnoreCase(name);
         if (results.isEmpty()) {

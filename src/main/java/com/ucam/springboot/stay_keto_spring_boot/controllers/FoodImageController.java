@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/images")
+@RequestMapping("/image-api")
 @CrossOrigin(origins = "*")
 public class FoodImageController {
 
