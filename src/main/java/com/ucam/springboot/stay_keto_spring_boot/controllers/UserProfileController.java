@@ -76,8 +76,10 @@ public class UserProfileController {
             }
             user.setGender(updatedUser.getGender());
             user.setEmail(updatedUser.getEmail());
+            user.setAge(updatedUser.getAge());
             user.setCurrentWeight(updatedUser.getCurrentWeight());
             user.setTargetWeight(updatedUser.getTargetWeight());
+            user.setHeight(updatedUser.getHeight());
             user.setPregnant(updatedUser.isPregnant());
             user.setActivityLevel(updatedUser.getActivityLevel());
             return ResponseEntity.ok(userRepository.save(user));

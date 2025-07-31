@@ -20,11 +20,12 @@ public class User {
     private String name;
     private String lastName;
     private String email;
+    private Integer age;
     private Double currentWeight;
     private Double targetWeight;
     private boolean pregnant;
-    private String Gender;
-    private String height;
+    private String gender;
+    private Integer height;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
     private String activityLevel;
