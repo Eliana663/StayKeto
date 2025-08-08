@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface DailyFoodEntryRepository extends JpaRepository<DailyFoodEntry, Long> {
     List<DailyFoodEntry> findByDate(LocalDate date);
-
+    List<DailyFoodEntry> findByDateBetween(LocalDate start, LocalDate end);
 }
