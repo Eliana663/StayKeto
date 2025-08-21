@@ -1,7 +1,10 @@
 package com.ucam.springboot.stay_keto_spring_boot.dto;
 
+import lombok.Data;
+
 import java.time.LocalDate;
 
+@Data
 public class MacroSummary {
 
     private LocalDate date;

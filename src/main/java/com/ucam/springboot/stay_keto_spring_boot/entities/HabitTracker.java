@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@Table(name= "habit_records")
+@Table(name= "habit_tracker")
 
 public class HabitTracker {
 
@@ -15,9 +15,14 @@ public class HabitTracker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userId;
-    private String habitName;
-    private Boolean completed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "habit_id")
+    private Habit habit;
     private LocalDate date;
 
-
 }
+
+
+
+
