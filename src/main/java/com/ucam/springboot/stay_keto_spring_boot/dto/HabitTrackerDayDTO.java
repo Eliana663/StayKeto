@@ -2,21 +2,22 @@ package com.ucam.springboot.stay_keto_spring_boot.dto;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
+@NoArgsConstructor
 @Data
 public class HabitTrackerDayDTO {
-
-
-    private Long userId;
     private List<HabitDTO> completedHabits;
-    private int day;
+    private LocalDate date;
+    private Long userId;
 
-    public HabitTrackerDayDTO(Long userId, int day, List<HabitDTO> completedHabits) {
-        this.userId = userId;
+    public HabitTrackerDayDTO(Long userId, LocalDate date, List<HabitDTO> completedHabits) {
         this.completedHabits = completedHabits;
-        this.day = day;
+        this.date = date;
+        this.userId = userId;
 
     }
 
