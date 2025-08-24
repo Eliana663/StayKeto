@@ -36,6 +36,9 @@ public class FoodItem {
     private Double proteins;
     private Boolean isKeto;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Long getImageId() {
         return image != null ? image.getId() : null;

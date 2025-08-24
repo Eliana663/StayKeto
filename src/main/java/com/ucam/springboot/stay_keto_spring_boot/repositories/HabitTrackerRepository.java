@@ -17,8 +17,6 @@ public interface HabitTrackerRepository extends JpaRepository<HabitTracker, Long
 
 
 
-
-
         @Query(value = "SELECT * FROM habit_tracker WHERE user_id = :userId AND YEAR(date) = :year AND MONTH(date) = :month;",
                     nativeQuery = true)
         List<HabitTracker> findByUserIdAndMonth(@Param("userId") Long userId,

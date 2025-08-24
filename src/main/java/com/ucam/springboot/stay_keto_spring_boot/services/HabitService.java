@@ -5,6 +5,7 @@ import com.ucam.springboot.stay_keto_spring_boot.dto.HabitTrackerDayDTO;
 import com.ucam.springboot.stay_keto_spring_boot.dto.MonthlyHabitsDTO;
 import com.ucam.springboot.stay_keto_spring_boot.entities.Habit;
 import com.ucam.springboot.stay_keto_spring_boot.entities.HabitTracker;
+import com.ucam.springboot.stay_keto_spring_boot.repositories.HabitRepository;
 import com.ucam.springboot.stay_keto_spring_boot.repositories.HabitTrackerRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,22 @@ import java.util.stream.Collectors;
 import java.time.LocalDate;
 
 @Service
-public class HabitTrackerService {
+public class HabitService {
 
     private final HabitTrackerRepository habitTrackerRepository;
+    private final HabitRepository habitRepository;
 
-    public HabitTrackerService(HabitTrackerRepository habitTrackerRepository) {
+    public HabitService(HabitTrackerRepository habitTrackerRepository, HabitRepository habitRepository) {
         this.habitTrackerRepository = habitTrackerRepository;
+        this.habitRepository = habitRepository;
+    }
+
+    public Habit getHabitByName(String name, Long userId) {
+        return habitRepository.findHabitByNameAndUserId(name, userId);
+    }
+
+    public Habit saveHabit(Habit habit) {
+        return habitRepository.save(habit);
     }
 
     // --- Get habits per month ---
@@ -33,7 +44,7 @@ public class HabitTrackerService {
         Map<LocalDate, List<HabitDTO>> habitsByDay = habits.stream()
                 .collect(Collectors.groupingBy(
                         HabitTracker::getDate,
-                        Collectors.mapping(h -> new HabitDTO(h.getId(), h.getHabit().getName()),
+                        Collectors.mapping(h -> new HabitDTO(h.getId(), h.getHabit().getName(), userId),
                                 Collectors.toList()
                         )
                 ));
@@ -55,12 +66,6 @@ public class HabitTrackerService {
         return habitTrackerRepository.findByUserIdAndDate(userId, date);
     }
 
-    public Habit getHabitById(Long id) {
-
-        HabitTracker habitTracker = habitTrackerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Habit not found with id: " + id));
-        return habitTracker.getHabit();
-    }
 
     // --- Delete ---
     public void deleteById(Long id) {
@@ -69,7 +74,15 @@ public class HabitTrackerService {
 
     public HabitTracker getByUserIdAndDateAndHabit(Long userId, LocalDate date, Habit habit) {
         return habitTrackerRepository.findByUserIdAndDateAndHabit(userId, date, habit);
+
     }
+
+    public List<HabitDTO> getHabitsByUserId(Long userId) {
+        return habitRepository.findHabitsByUserId(userId).stream()
+                .map(h -> new HabitDTO(h.getId(), h.getName(), userId))
+                .collect(Collectors.toList());
+    }
+
 
 
 }

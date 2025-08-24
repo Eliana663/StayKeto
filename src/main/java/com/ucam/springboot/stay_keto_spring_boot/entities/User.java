@@ -1,12 +1,15 @@
 package com.ucam.springboot.stay_keto_spring_boot.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -33,13 +36,11 @@ public class User {
 
 
 
-    @ManyToOne
-    @JoinColumn(name = "dailyLog_id")
-    private DailyLog dailyLog;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DailyLog> dailyLogs;
 
-    @ManyToOne
-    @JoinColumn(name = "foodItem_id")
-    private FoodItem foodItem;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FoodItem> foodItems;
 
 
 }
