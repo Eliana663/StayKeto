@@ -25,8 +25,8 @@ public class HabitService {
         this.habitRepository = habitRepository;
     }
 
-    public Habit getHabitByName(String name, Long userId) {
-        return habitRepository.findHabitByNameAndUserId(name, userId);
+    public Habit getHabitByNameAndUserIdAndColor(String name, Long userId, String color) {
+        return habitRepository.findHabitByNameAndUserIdAndColor(name, userId, color);
     }
 
     public Habit saveHabit(Habit habit) {
@@ -44,7 +44,7 @@ public class HabitService {
         Map<LocalDate, List<HabitDTO>> habitsByDay = habits.stream()
                 .collect(Collectors.groupingBy(
                         HabitTracker::getDate,
-                        Collectors.mapping(h -> new HabitDTO(h.getId(), h.getHabit().getName(), userId),
+                        Collectors.mapping(h -> new HabitDTO(h.getId(), h.getHabit().getName(), userId, h.getHabit().getColor()),
                                 Collectors.toList()
                         )
                 ));
@@ -62,15 +62,16 @@ public class HabitService {
         return habitTrackerRepository.save(habit);
     }
 
-    public List<HabitTracker> getHabitsByUserIdAndDate(Long userId, LocalDate date) {
-        return habitTrackerRepository.findByUserIdAndDate(userId, date);
-    }
+
 
 
     // --- Delete ---
     public void deleteById(Long id) {
-        habitTrackerRepository.deleteById(id);
+        habitRepository.deleteById(id);
     }
+
+
+
 
     public HabitTracker getByUserIdAndDateAndHabit(Long userId, LocalDate date, Habit habit) {
         return habitTrackerRepository.findByUserIdAndDateAndHabit(userId, date, habit);
@@ -79,7 +80,7 @@ public class HabitService {
 
     public List<HabitDTO> getHabitsByUserId(Long userId) {
         return habitRepository.findHabitsByUserId(userId).stream()
-                .map(h -> new HabitDTO(h.getId(), h.getName(), userId))
+                .map(h -> new HabitDTO(h.getId(), h.getName(), userId, h.getColor()))
                 .collect(Collectors.toList());
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,6 +20,11 @@ public class Habit {
     private Long userId;
 
     private String name;
+
+    private String color;
+
+    @OneToMany(mappedBy = "habit", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<HabitTracker> trackers;
 
 
 

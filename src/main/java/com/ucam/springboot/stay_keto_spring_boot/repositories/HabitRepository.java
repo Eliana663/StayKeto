@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface HabitRepository extends JpaRepository<Habit, Long> {
 
-    Habit findHabitByNameAndUserId(String name, Long userId);
+    Habit findHabitByNameAndUserIdAndColor(String name, Long userId, String color);
 
     @Query(
             value = "SELECT h.* FROM habit h " +
@@ -18,6 +18,8 @@ public interface HabitRepository extends JpaRepository<Habit, Long> {
             nativeQuery = true
     )
     List<Habit> findHabitsByUserId(@Param("userId") Long userId);
+
+    void deleteById(Long id);
 }
 
 

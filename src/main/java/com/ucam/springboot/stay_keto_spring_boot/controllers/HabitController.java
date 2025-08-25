@@ -6,9 +6,7 @@ import com.ucam.springboot.stay_keto_spring_boot.dto.HabitTrackerDayDTO;
 import com.ucam.springboot.stay_keto_spring_boot.dto.MonthlyHabitsDTO;
 import com.ucam.springboot.stay_keto_spring_boot.entities.Habit;
 import com.ucam.springboot.stay_keto_spring_boot.entities.HabitTracker;
-import com.ucam.springboot.stay_keto_spring_boot.entities.User;
 import com.ucam.springboot.stay_keto_spring_boot.services.HabitService;
-import com.ucam.springboot.stay_keto_spring_boot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -27,17 +25,20 @@ public class HabitController {
 
         Long userId = habitDTO.getUserId();
         String habitName = habitDTO.getName();
+        String habitColor = habitDTO.getColor();
 
-        Habit habit = habitService.getHabitByName(habitDTO.getName(), habitDTO.getUserId());
+        Habit habit = habitService.getHabitByNameAndUserIdAndColor(habitDTO.getName(), habitDTO.getUserId(), habitDTO.getColor());
 
         if (habit == null) {
             habit = new Habit();
             habit.setName(habitName);
             habit.setUserId(habitDTO.getUserId());
+            habit.setColor(habitColor);
+
             habit = habitService.saveHabit(habit);
         }
 
-        return new HabitDTO(habit.getId(), habit.getName(), userId);
+        return new HabitDTO(habit.getId(), habit.getName(), userId, habit.getColor());
     }
 
 
@@ -67,7 +68,7 @@ public class HabitController {
         HabitTrackerDayDTO response = new HabitTrackerDayDTO();
         response.setUserId(userId);
         response.setDate(date);
-        response.setCompletedHabits(List.of(new HabitDTO(habit.getId(), habit.getName(), userId)));
+        response.setCompletedHabits(List.of(new HabitDTO(habit.getId(), habit.getName(), userId, habit.getColor())));
 
         return response;
     }
@@ -88,7 +89,7 @@ public class HabitController {
  }
 
     // Eliminar un hábito por id
-    @DeleteMapping("/tracker/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteHabit(@PathVariable Long id) {
         habitService.deleteById(id);
     }
