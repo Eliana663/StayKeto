@@ -1,12 +1,13 @@
 package com.ucam.springboot.stay_keto_spring_boot.dto;
 
+import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.Getter;
 
 import java.util.List;
 
 @Data
-@Getter
+
 public class MonthlyHabitsDTO {
     private Long userId;
     private List<HabitTrackerDayDTO> monthlyTracker;

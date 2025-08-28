@@ -21,4 +21,11 @@ public class UserService {
 
     public User saveUser(User user) { return userRepository.save(user);}
 
+    public User updateGoalWeight(Long userId, Double targetWeight) {
+        return userRepository.findById(userId).map(user -> {
+            user.setTargetWeight(targetWeight);
+            return user;
+        }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
 }
