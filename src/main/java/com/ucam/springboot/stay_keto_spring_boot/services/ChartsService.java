@@ -5,20 +5,20 @@ import com.ucam.springboot.stay_keto_spring_boot.entities.User;
 import com.ucam.springboot.stay_keto_spring_boot.entities.WeightLog;
 import com.ucam.springboot.stay_keto_spring_boot.repositories.UserRepository;
 import com.ucam.springboot.stay_keto_spring_boot.repositories.WeightLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class GraphicsService {
+public class ChartsService {
 
     private final WeightLogRepository weightLogRepository;
     private final UserRepository userRepository;
 
 
-    public GraphicsService(WeightLogRepository weightLogRepository, UserRepository userRepository) {
+    public ChartsService(WeightLogRepository weightLogRepository, UserRepository userRepository) {
         this.weightLogRepository = weightLogRepository;
         this.userRepository = userRepository;
     }
@@ -39,6 +39,13 @@ public class GraphicsService {
         userRepository.save(user);
 
         return weightLog;
+    }
+
+    public List<WeightLogDTO> getDailyWeights(Long userId) {
+        List<WeightLog> logs = weightLogRepository.findByUserId(userId);
+          return logs.stream()
+                  .map(l -> new WeightLogDTO(l.getDate(), l.getWeight(),  l.getId()))
+                  .collect(Collectors.toList());
     }
 
 }
