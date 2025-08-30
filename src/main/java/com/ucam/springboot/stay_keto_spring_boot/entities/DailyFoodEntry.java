@@ -3,7 +3,7 @@ package com.ucam.springboot.stay_keto_spring_boot.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
+
 
 import java.time.LocalDate;
 
@@ -16,6 +16,7 @@ public class DailyFoodEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long userId;
     private Long foodItemId;
     private String name;
 
@@ -23,8 +24,8 @@ public class DailyFoodEntry {
     private Double calories;
     private Double fat;
     private Double proteins;
-    private Double amount; // Qty in grams
+    private Double weightInGrams;
 
-    private LocalDate date; // Register date
+    private LocalDate date;
 
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class MacroSummary {
+public class MacroSummaryDTO {
 
     private LocalDate date;
     private Double proteins;
@@ -13,7 +13,7 @@ public class MacroSummary {
     private Double carbohydrates;
     private Double calories;
 
-    public MacroSummary(LocalDate date, Double proteins, Double fat, Double carbohydrates, Double calories) {
+    public MacroSummaryDTO(LocalDate date, Double proteins, Double fat, Double carbohydrates, Double calories) {
         this.date = date;
         this.proteins = proteins;
         this.fat = fat;

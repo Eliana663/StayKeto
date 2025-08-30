@@ -1,6 +1,8 @@
 package com.ucam.springboot.stay_keto_spring_boot.controllers;
+import com.ucam.springboot.stay_keto_spring_boot.dto.DailyFoodEntryDTO;
 import com.ucam.springboot.stay_keto_spring_boot.entities.DailyFoodEntry;
-import com.ucam.springboot.stay_keto_spring_boot.dto.MacroSummary;
+import com.ucam.springboot.stay_keto_spring_boot.dto.MacroSummaryDTO;
+import com.ucam.springboot.stay_keto_spring_boot.entities.User;
 import com.ucam.springboot.stay_keto_spring_boot.services.DailyFoodEntryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +19,12 @@ public class DailyFoodEntryController {
         this.service = service;
     }
 
-    @PostMapping
-    public DailyFoodEntry addFoodEntry(@RequestBody DailyFoodEntry entry) {
-        if(entry.getDate() == null) {
-            entry.setDate(LocalDate.now());
-        }
+    @PostMapping("/users/{userId}")
+    public DailyFoodEntryDTO addFoodEntry(
+            @PathVariable Long userId,
+            @RequestBody DailyFoodEntry entry) {
+
+        entry.setUserId(userId);
         return service.saveEntry(entry);
 }
 
@@ -32,7 +35,7 @@ public class DailyFoodEntryController {
     }
 
     @GetMapping("/macros-by-date")
-    public List<MacroSummary> getMacrosByDateRange(@RequestParam String start, @RequestParam String end) {
+    public List<MacroSummaryDTO> getMacrosByDateRange(@RequestParam String start, @RequestParam String end) {
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
         return service.getMacrosGroupedByDate(startDate, endDate);

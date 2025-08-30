@@ -1,7 +1,8 @@
 package com.ucam.springboot.stay_keto_spring_boot.services;
 
+import com.ucam.springboot.stay_keto_spring_boot.dto.DailyFoodEntryDTO;
 import com.ucam.springboot.stay_keto_spring_boot.entities.DailyFoodEntry;
-import com.ucam.springboot.stay_keto_spring_boot.dto.MacroSummary;
+import com.ucam.springboot.stay_keto_spring_boot.dto.MacroSummaryDTO;
 import com.ucam.springboot.stay_keto_spring_boot.repositories.DailyFoodEntryRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +17,46 @@ public class DailyFoodEntryService {
         private final DailyFoodEntryRepository repository;
 
         public DailyFoodEntryService(DailyFoodEntryRepository repository) {
+
             this.repository = repository;
 
         }
 
-        public DailyFoodEntry saveEntry(DailyFoodEntry entry) {
-            return repository.save(entry);
+        public DailyFoodEntryDTO saveEntry(DailyFoodEntry dto) {
+            DailyFoodEntry entry = new DailyFoodEntry();
+            entry.setFoodItemId(dto.getFoodItemId());
+            entry.setUserId(dto.getUserId());
+            entry.setName(dto.getName());
+            entry.setCarbohydrates(dto.getCarbohydrates());
+            entry.setCalories(dto.getCalories());
+            entry.setFat(dto.getFat());
+            entry.setProteins(dto.getProteins());
+            entry.setWeightInGrams(dto.getWeightInGrams());
+            entry.setDate(dto.getDate() != null ? dto.getDate() : LocalDate.now());
+
+
+            DailyFoodEntry saved = repository.save(entry);
+
+            return new DailyFoodEntryDTO(
+                    saved.getFoodItemId(),
+                    saved.getUserId(),
+                    saved.getName(),
+                    saved.getCarbohydrates(),
+                    saved.getCalories(),
+                    saved.getFat(),
+                    saved.getProteins(),
+                    saved.getWeightInGrams(),
+                    saved.getDate()
+
+
+            );
         }
 
         public List<DailyFoodEntry> getEntriesByDate(LocalDate date) {
             return repository.findByDate(date);
         }
 
-    public List<MacroSummary> getMacrosGroupedByDate(LocalDate start, LocalDate end) {
+    public List<MacroSummaryDTO> getMacrosGroupedByDate(LocalDate start, LocalDate end) {
         List<DailyFoodEntry> entries = repository.findByDateBetween(start, end);
 
         return entries.stream()
@@ -43,9 +71,9 @@ public class DailyFoodEntryService {
                     Double carbohydrates = dayEntries.stream().mapToDouble(DailyFoodEntry::getCarbohydrates).sum();
                     Double calories = dayEntries.stream().mapToDouble(DailyFoodEntry::getCalories).sum();
 
-                    return new MacroSummary(date, proteins, fat, carbohydrates, calories);
+                    return new MacroSummaryDTO(date, proteins, fat, carbohydrates, calories);
                 })
-                .sorted(Comparator.comparing(MacroSummary::getDate))
+                .sorted(Comparator.comparing(MacroSummaryDTO::getDate))
                 .collect(Collectors.toList());
     }
 
