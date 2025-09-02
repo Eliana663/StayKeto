@@ -1,18 +1,21 @@
 package com.ucam.springboot.stay_keto_spring_boot.services;
 
-import com.ucam.springboot.stay_keto_spring_boot.entities.DailyLog;
+import org.springframework.stereotype.Service;
+import com.ucam.springboot.stay_keto_spring_boot.repositories.FoodItemRepository;
 import com.ucam.springboot.stay_keto_spring_boot.entities.FoodItem;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface FoodItemService {
+@Service
+public class FoodItemService {
 
-    FoodItem saveFoodItem ( FoodItem foodItem);
+    private final FoodItemRepository repository;
 
-    Optional<FoodItem> findById(Long id);
+    public FoodItemService(FoodItemRepository repository) {
+        this.repository = repository;
+    }
 
-    List<FoodItem> listAllFoodItems();
-
-
+    public List<FoodItem> getAllFoodItems() {
+        return repository.findAll();
+    }
 }

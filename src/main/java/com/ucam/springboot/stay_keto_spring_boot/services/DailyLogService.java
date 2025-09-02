@@ -2,17 +2,31 @@ package com.ucam.springboot.stay_keto_spring_boot.services;
 
 import com.ucam.springboot.stay_keto_spring_boot.entities.DailyLog;
 import com.ucam.springboot.stay_keto_spring_boot.entities.User;
+import com.ucam.springboot.stay_keto_spring_boot.repositories.DailyLogRepository;
 
-import java.time.DayOfWeek;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
-public interface DailyLogService {
+@Service
+public class DailyLogService {
 
-    DailyLog saveDailyLog(DailyLog dailyLog);
+    private final DailyLogRepository dailyLogRepository;
 
-    Optional<DailyLog> findById(Long id);
+    public DailyLogService(DailyLogRepository dailyLogRepository) {
+        this.dailyLogRepository = dailyLogRepository;
+    }
 
-    Optional<DailyLog> findByDateAndUser(LocalDate date, User user);
+    public DailyLog saveDailyLog(DailyLog dailyLog) {
+        return dailyLogRepository.save(dailyLog);
+    }
 
+    public Optional<DailyLog> findById(Long id) {
+        return dailyLogRepository.findById(id);
+    }
+
+    public Optional<DailyLog> findByDateAndUser(LocalDate date, User user) {
+        return dailyLogRepository.findByDateAndUser(date, user);
+    }
 }

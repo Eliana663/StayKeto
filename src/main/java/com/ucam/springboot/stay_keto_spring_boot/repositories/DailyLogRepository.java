@@ -11,7 +11,5 @@ import java.util.Optional;
 @Repository
 public interface DailyLogRepository extends JpaRepository<DailyLog, Long> {
 
-
-
     Optional<DailyLog> findByDateAndUser(LocalDate date, User user);
 }
