@@ -21,7 +21,7 @@ public class DailyFoodEntryDTO {
     public DailyFoodEntryDTO (Long foodItemId, Long userId, String name, Double carbohydrates, Double calories, Double fat, Double proteins, Double weightInGrams, LocalDate date) {
 
         this.foodItemId = foodItemId;
-        this.userId = getUserId();
+        this.userId = userId;
         this.name = name;
         this.carbohydrates = carbohydrates;
         this.calories = calories;
@@ -31,6 +31,7 @@ public class DailyFoodEntryDTO {
         this.date = date;
 
     }
+
 
 }
 

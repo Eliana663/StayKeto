@@ -52,8 +52,21 @@ public class DailyFoodEntryService {
             );
         }
 
-        public List<DailyFoodEntry> getEntriesByDate(LocalDate date) {
-            return repository.findByDate(date);
+        public List<DailyFoodEntryDTO> getEntriesByDate(LocalDate date) {
+            return repository.findByDate(date)
+            .stream()
+            .map(entry -> new DailyFoodEntryDTO(
+                    entry.getFoodItemId(),
+                    entry.getUserId(),
+                    entry.getName(),
+                    entry.getCarbohydrates(),
+                    entry.getCalories(),
+                    entry.getFat(),
+                    entry.getProteins(),
+                    entry.getWeightInGrams(),
+                    entry.getDate()
+            ))
+                    .collect(Collectors.toList());
         }
 
     public List<MacroSummaryDTO> getMacrosGroupedByDate(LocalDate start, LocalDate end) {
