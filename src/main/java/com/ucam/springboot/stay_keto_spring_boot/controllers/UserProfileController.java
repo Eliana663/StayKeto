@@ -82,6 +82,7 @@ public class UserProfileController {
             user.setHeight(updatedUser.getHeight());
             user.setPregnant(updatedUser.isPregnant());
             user.setActivityLevel(updatedUser.getActivityLevel());
+            user.setGoal(updatedUser.getGoal());
             return ResponseEntity.ok(userRepository.save(user));
         }).orElse(ResponseEntity.notFound().build());
     }

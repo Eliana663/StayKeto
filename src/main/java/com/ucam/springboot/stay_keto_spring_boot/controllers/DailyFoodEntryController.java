@@ -29,7 +29,7 @@ public class DailyFoodEntryController {
 }
 
     @GetMapping
-    public List<DailyFoodEntry> getFoodEntriesByDate(@RequestParam String date) {
+    public List<DailyFoodEntryDTO> getFoodEntriesByDate(@RequestParam String date) {
     LocalDate localDate = LocalDate.parse(date); // yyyy-MM-DD format
     return service.getEntriesByDate(localDate);
     }
