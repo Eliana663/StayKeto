@@ -32,6 +32,7 @@ public class User {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
     private String activityLevel;
+    private String goal;
 
 
 
