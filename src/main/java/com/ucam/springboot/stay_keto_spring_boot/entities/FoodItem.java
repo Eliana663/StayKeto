@@ -30,15 +30,12 @@ public class FoodItem {
     @JoinColumn(name = "image_id")
     private FoodImage image;
     private Double carbohydrates;
-    private Double quantity;
+    private Double weightInGrams;
     private Double calories;
     private Double fat;
     private Double proteins;
     private Boolean isKeto;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     public Long getImageId() {
         return image != null ? image.getId() : null;
