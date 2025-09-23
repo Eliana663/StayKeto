@@ -7,6 +7,7 @@ import lombok.Data;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,10 @@ public class User {
     private String profilePhoto;
     private String name;
     private String lastName;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
     private Integer age;
     private Double currentWeight;
     private Double targetWeight;
@@ -33,12 +37,5 @@ public class User {
     private LocalDate birthDate;
     private String activityLevel;
     private String goal;
-
-
-
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DailyLog> dailyLogs;
-
 
 }

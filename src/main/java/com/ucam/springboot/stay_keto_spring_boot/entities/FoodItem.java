@@ -47,9 +47,9 @@ public class FoodItem {
 
         String filename = image.getImageUrl(); // Ej: "images/Leche.jpg"
 
-        // Asegúrate que filename no incluya el dominio, solo la ruta relativa
+
         if (filename.startsWith("http")) {
-            // Si ya tiene dominio, no agregar nada
+
             return filename;
         } else {
             return "http://localhost:8081/" + filename;
