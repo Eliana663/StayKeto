@@ -30,15 +30,12 @@ public class FoodItem {
     @JoinColumn(name = "image_id")
     private FoodImage image;
     private Double carbohydrates;
-    private Double quantity;
+    private Double weightInGrams;
     private Double calories;
     private Double fat;
     private Double proteins;
     private Boolean isKeto;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     public Long getImageId() {
         return image != null ? image.getId() : null;
@@ -50,9 +47,9 @@ public class FoodItem {
 
         String filename = image.getImageUrl(); // Ej: "images/Leche.jpg"
 
-        // Asegúrate que filename no incluya el dominio, solo la ruta relativa
+
         if (filename.startsWith("http")) {
-            // Si ya tiene dominio, no agregar nada
+
             return filename;
         } else {
             return "http://localhost:8081/" + filename;

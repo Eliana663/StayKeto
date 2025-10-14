@@ -10,4 +10,7 @@ import java.util.List;
 public interface WeightLogRepository extends JpaRepository<WeightLog, Long> {
 
     List<WeightLog> findByUserId(Long userId);
+
+
+
 }

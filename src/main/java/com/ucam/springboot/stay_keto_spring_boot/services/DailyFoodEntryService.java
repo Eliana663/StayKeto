@@ -38,6 +38,7 @@ public class DailyFoodEntryService {
             DailyFoodEntry saved = repository.save(entry);
 
             return new DailyFoodEntryDTO(
+                    saved.getId(),
                     saved.getFoodItemId(),
                     saved.getUserId(),
                     saved.getName(),
@@ -56,6 +57,7 @@ public class DailyFoodEntryService {
             return repository.findByDate(date)
             .stream()
             .map(entry -> new DailyFoodEntryDTO(
+                    entry.getId(),
                     entry.getFoodItemId(),
                     entry.getUserId(),
                     entry.getName(),
@@ -90,5 +92,8 @@ public class DailyFoodEntryService {
                 .collect(Collectors.toList());
     }
 
+    public void deleteEntryById(Long id) {
+        repository.deleteById(id);
     }
+}
 
