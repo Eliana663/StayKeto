@@ -4,6 +4,7 @@ import com.ucam.springboot.stay_keto_spring_boot.entities.DailyFoodEntry;
 import com.ucam.springboot.stay_keto_spring_boot.dto.MacroSummaryDTO;
 import com.ucam.springboot.stay_keto_spring_boot.entities.User;
 import com.ucam.springboot.stay_keto_spring_boot.services.DailyFoodEntryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -39,6 +40,13 @@ public class DailyFoodEntryController {
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
         return service.getMacrosGroupedByDate(startDate, endDate);
+    }
+
+    // METODO PARA BORRAR DEL CARRITO. AUN NO IMPLEMENTAADO EN FRONT
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFoodEntry(@PathVariable Long id) {
+        service.deleteEntryById(id);   // Llamada al service para eliminar de la DB
+        return ResponseEntity.noContent().build();
     }
 
 }
