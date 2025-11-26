@@ -1,4 +1,3 @@
-// src/main/java/com/ucam/springboot/stay_keto_spring_boot/filters/JwtAuthenticationFilter.java
 package com.ucam.springboot.stay_keto_spring_boot.filters;
 
 import com.ucam.springboot.stay_keto_spring_boot.services.JwtService;
@@ -33,28 +32,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // Rutas públicas que queremos ignorar
-        if (path.startsWith("/api/auth/") ||   // login y register
-                path.startsWith("/images/") ||
-                path.startsWith("/food/")) {
+        // Rutas públicas
+        if (path.startsWith("/api/auth/") || path.startsWith("/images/") || path.startsWith("/food/")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String email;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
-        email = jwtService.extractUsername(jwt);
+        final String jwt = authHeader.substring(7);
+        final String email = jwtService.extractUsername(jwt);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
             if (jwtService.isTokenValid(jwt, userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authToken =

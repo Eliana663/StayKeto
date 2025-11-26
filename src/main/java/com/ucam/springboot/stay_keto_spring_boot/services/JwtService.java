@@ -1,4 +1,3 @@
-// src/main/java/com/stayketo/services/JwtService.java
 package com.ucam.springboot.stay_keto_spring_boot.services;
 
 import io.jsonwebtoken.Claims;
@@ -11,12 +10,14 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
+import java.util.Base64;
 
 @Service
 public class JwtService {
 
-    // Secret key (mínimo 256 bits, base64)
-    private static final String SECRET_KEY = "TuClaveSecretaMuyLargaDeAlMenos32Caracteres1234";
+    // Secret key Base64 válida (al menos 256 bits)
+    private static final String SECRET_KEY = Base64.getEncoder()
+            .encodeToString("MiClaveMuySeguraDeAlMenos32Caracteres123456".getBytes());
 
     // Generar token con email como subject
     public String generateToken(String email) {
@@ -31,7 +32,7 @@ public class JwtService {
     // Validar token
     public boolean isTokenValid(String token, String email) {
         final String username = extractUsername(token);
-        return (username.equals(email)) && !isTokenExpired(token);
+        return (username != null && username.equals(email)) && !isTokenExpired(token);
     }
 
     // Extraer email
