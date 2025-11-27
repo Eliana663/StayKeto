@@ -44,6 +44,8 @@ public class SecurityConfig  {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/users/**", "/api/habit/**").permitAll()
                         .requestMatchers("/api/daily-measurements/**", "/api/weight/**").permitAll()
+                        .requestMatchers("/api/calories/**").permitAll()
+                        .requestMatchers("/api/daily-food/**").permitAll()
 
                         .anyRequest().authenticated()
                 )
