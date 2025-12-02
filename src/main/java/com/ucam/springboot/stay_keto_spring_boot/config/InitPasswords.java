@@ -21,7 +21,7 @@ public class InitPasswords implements CommandLineRunner {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
 
         // Email del usuario que quieres actualizar
-        String email = "elianadtorrest@gmail.com";
+        String email = "alejandro@gmail.com";
 
         // Contraseña que quieres establecer
         String plainPassword = "MiContra123";

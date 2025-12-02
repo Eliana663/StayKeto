@@ -32,22 +32,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // Rutas públicas
-        if (path.startsWith("/api/auth/") || path.startsWith("/images/") || path.startsWith("/food/")) {
+        // ---------------------------
+        // Rutas públicas (no necesitan token)
+        // ---------------------------
+        if (path.startsWith("/auth/") || path.startsWith("/images/")
+                || path.startsWith("/food/") || path.startsWith("/uploads/")) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        // ---------------------------
+        // Rutas privadas: requieren JWT
+        // Ejemplos de rutas privadas:
+        // /habit/**, /api/users/**, /api/daily-measurements/**, /api/weight/**, /api/calories/**, /api/daily-food/**
+        // ---------------------------
 
         final String authHeader = request.getHeader("Authorization");
 
+        // Si no hay token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token requerido");
             return;
         }
 
-        final String jwt = authHeader.substring(7);
+        final String jwt = authHeader.substring(7); // quitar "Bearer "
         final String email = jwtService.extractUsername(jwt);
 
+        // Validar token y setear autenticación
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -55,6 +67,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token inválido o expirado");
+                return;
             }
         }
 
