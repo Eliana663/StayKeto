@@ -4,6 +4,7 @@ import com.ucam.springboot.stay_keto_spring_boot.filters.JwtAuthenticationFilter
 import com.ucam.springboot.stay_keto_spring_boot.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -39,17 +40,22 @@ public class SecurityConfig  {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // PÚBLIC
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/images/**", "/food/**").permitAll()
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/api/users/**", "/api/habit/**").permitAll()
-                        .requestMatchers("/api/daily-measurements/**", "/api/weight/**").permitAll()
-                        .requestMatchers("/api/calories/**").permitAll()
-                        .requestMatchers("/api/daily-food/**").permitAll()
+                        .requestMatchers("/images/**", "/food/**", "/uploads/**").permitAll()
 
-                        .anyRequest().authenticated()
+                        // PRIVATE
+                        .requestMatchers("/api/habit/**").authenticated()
+                        .requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers("/api/daily-measurements/**").authenticated()
+                        .requestMatchers("/api/weight/**").authenticated()
+                        .requestMatchers("/api/calories/**").authenticated()
+                        .requestMatchers("/api/daily-food/**").authenticated()
+
+                        
+                        .anyRequest().denyAll()
                 )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
