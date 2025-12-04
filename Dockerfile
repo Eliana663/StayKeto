@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 RUN chmod +x mvnw
-
+ENV MAVEN_OPTS="-Dfile.encoding=UTF-8"
 RUN ./mvnw clean package -DskipTests
 
 # -------------------------------
