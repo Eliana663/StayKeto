@@ -13,21 +13,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
-
-    // Lista de rutas públicas
-    private static final List<String> PUBLIC_URLS = List.of(
-            "/auth/",
-            "/images/",
-            "/food/",
-            "/uploads/"
-    );
 
     public JwtAuthenticationFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService) {
         this.jwtService = jwtService;
@@ -41,8 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // Si la ruta es pública, dejamos pasar la petición sin validar JWT
-        if (PUBLIC_URLS.stream().anyMatch(path::startsWith)) {
+        // ---------------------------
+        // Rutas públicas (no necesitan token)
+        // ---------------------------
+        if (path.startsWith("/auth/") ||
+                path.startsWith("/images/") ||
+                path.startsWith("/food/") ||
+                path.startsWith("/uploads/")) {
+
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,14 +48,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Rutas privadas: requieren JWT
         // ---------------------------
         final String authHeader = request.getHeader("Authorization");
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token requerido");
             return;
         }
 
-        final String jwt = authHeader.substring(7);
+        final String jwt = authHeader.substring(7); // quitar "Bearer "
         final String email = jwtService.extractUsername(jwt);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {

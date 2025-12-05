@@ -4,7 +4,6 @@ import com.ucam.springboot.stay_keto_spring_boot.filters.JwtAuthenticationFilter
 import com.ucam.springboot.stay_keto_spring_boot.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -24,7 +23,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig  {
+public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsServiceImpl userDetailsService;
@@ -40,10 +39,9 @@ public class SecurityConfig  {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        // PÚBLIC
+                        // PUBLIC
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/images/**", "/food/**", "/uploads/**") .permitAll()
-
+                        .requestMatchers("/images/**", "/food/**", "/uploads/**").permitAll()
 
                         // PRIVATE
                         .requestMatchers("/api/habit/**").authenticated()
@@ -53,7 +51,6 @@ public class SecurityConfig  {
                         .requestMatchers("/api/calories/**").authenticated()
                         .requestMatchers("/api/daily-food/**").authenticated()
 
-                        
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -84,8 +81,8 @@ public class SecurityConfig  {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // tu frontend: reemplaza con la URL real si es distinto
-        configuration.setAllowedOriginPatterns(List.of( "http://localhost:5173"));
+        // Frontend actual en desarrollo
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -99,7 +96,4 @@ public class SecurityConfig  {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/image-api/**", "/public-images/**");
     }
-
-
-
 }
