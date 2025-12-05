@@ -43,7 +43,7 @@ public class SecurityConfig  {
                         // PÚBLIC
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/images/**", "/food/**", "/uploads/**") .permitAll()
-                        .requestMatchers("/api/searchByName").permitAll()
+                        .requestMatchers("/food/searchByName").permitAll()
 
                         // PRIVATE
                         .requestMatchers("/api/habit/**").authenticated()
