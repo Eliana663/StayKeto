@@ -13,12 +13,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
+
+    // Lista de rutas públicas
+    private static final List<String> PUBLIC_URLS = List.of(
+            "/auth/",
+            "/images/",
+            "/food/",
+            "/uploads/"
+    );
 
     public JwtAuthenticationFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService) {
         this.jwtService = jwtService;
@@ -32,34 +41,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // ---------------------------
-        // Rutas públicas (no necesitan token)
-        // ---------------------------
-        if (path.startsWith("/auth/") || path.startsWith("/images/")
-                || path.startsWith("/food/") || path.startsWith("/uploads/")) {
+        // Si la ruta es pública, dejamos pasar la petición sin validar JWT
+        if (PUBLIC_URLS.stream().anyMatch(path::startsWith)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // ---------------------------
         // Rutas privadas: requieren JWT
-        // Ejemplos de rutas privadas:
-        // /habit/**, /api/users/**, /api/daily-measurements/**, /api/weight/**, /api/calories/**, /api/daily-food/**
         // ---------------------------
-
         final String authHeader = request.getHeader("Authorization");
 
-        // Si no hay token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token requerido");
             return;
         }
 
-        final String jwt = authHeader.substring(7); // quitar "Bearer "
+        final String jwt = authHeader.substring(7);
         final String email = jwtService.extractUsername(jwt);
 
-        // Validar token y setear autenticación
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
