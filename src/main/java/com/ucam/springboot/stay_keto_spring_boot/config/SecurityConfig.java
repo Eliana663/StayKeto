@@ -42,8 +42,8 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(auth -> auth
                         // PÚBLIC
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/images/**", "/food/**", "/uploads/**")
-                        .permitAll().requestMatchers("/api/searchByName").permitAll()
+                        .requestMatchers("/images/**", "/food/**", "/uploads/**") .permitAll()
+                        .requestMatchers("/api/searchByName").permitAll()
 
                         // PRIVATE
                         .requestMatchers("/api/habit/**").authenticated()
@@ -85,7 +85,8 @@ public class SecurityConfig  {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // tu frontend: reemplaza con la URL real si es distinto
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173"));
+        configuration.setAllowedOriginPatterns(List.of( "http://localhost:5173",
+                "https://stayketo.onrender.com"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
