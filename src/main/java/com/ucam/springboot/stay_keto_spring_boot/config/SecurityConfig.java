@@ -85,8 +85,7 @@ public class SecurityConfig  {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // tu frontend: reemplaza con la URL real si es distinto
-        configuration.setAllowedOriginPatterns(List.of( "http://localhost:5173",
-                "https://stayketo.onrender.com"));
+        configuration.setAllowedOriginPatterns(List.of( "http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
