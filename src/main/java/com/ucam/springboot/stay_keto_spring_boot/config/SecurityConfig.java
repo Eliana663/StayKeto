@@ -42,7 +42,8 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(auth -> auth
                         // PÚBLIC
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/images/**", "/food/**", "/uploads/**").permitAll()
+                        .requestMatchers("/images/**", "/food/**", "/uploads/**")
+                        .permitAll().requestMatchers("/api/searchByName").permitAll()
 
                         // PRIVATE
                         .requestMatchers("/api/habit/**").authenticated()
