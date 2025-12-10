@@ -10,7 +10,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,12 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig  {
+public class SecurityConfig implements WebMvcConfigurer {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsServiceImpl userDetailsService;
@@ -34,17 +35,18 @@ public class SecurityConfig  {
         this.userDetailsService = userDetailsService;
     }
 
+    // ------------------- Security -------------------
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        // PÚBLIC
+                        // ENDPOINTS PÚBLICOS
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/images/**", "/food/**", "/uploads/**").permitAll()
 
-                        // PRIVATE
+                        // ENDPOINTS PROTEGIDOS
                         .requestMatchers("/api/habit/**").authenticated()
                         .requestMatchers("/api/users/**").authenticated()
                         .requestMatchers("/api/daily-measurements/**").authenticated()
@@ -52,7 +54,7 @@ public class SecurityConfig  {
                         .requestMatchers("/api/calories/**").authenticated()
                         .requestMatchers("/api/daily-food/**").authenticated()
 
-                        
+                        // Cualquier otro request queda denegado
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -83,7 +85,6 @@ public class SecurityConfig  {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // tu frontend: reemplaza con la URL real si es distinto
         configuration.setAllowedOriginPatterns(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
@@ -94,11 +95,12 @@ public class SecurityConfig  {
         return source;
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/image-api/**", "/public-images/**");
+    // ------------------- Recursos estáticos -------------------
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Esto sirve las imágenes de /uploads/** directamente desde la carpeta uploads/
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:uploads/")
+                .setCachePeriod(3600);
     }
-
-
-
 }

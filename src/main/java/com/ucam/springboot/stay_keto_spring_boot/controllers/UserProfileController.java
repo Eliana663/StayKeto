@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,8 +33,8 @@ public class UserProfileController {
 
     @Transactional
     @PostMapping("/{id}/upload-photo")
-    public ResponseEntity<String> uploadPhoto(@PathVariable Long id,
-                                              @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> uploadPhoto(@PathVariable Long id,
+                                                           @RequestParam("file") MultipartFile file) {
         try {
             System.out.println("Recibiendo archivo para user " + id + ": " + file.getOriginalFilename());
             String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -47,17 +49,22 @@ public class UserProfileController {
                 User user = optionalUser.get();
                 user.setProfilePhoto(filename);
                 userRepository.save(user);
-
             } else {
                 System.out.println("Usuario con id " + id + " no encontrado.");
             }
 
-            return ResponseEntity.ok("Foto subida con éxito: " + filename);
+            // Devuelve un JSON con la ruta de la foto
+            Map<String, String> response = new HashMap<>();
+            response.put("photoUrl", filename); // o "/uploads/" + filename si quieres la ruta completa
+            return ResponseEntity.ok(response);
+
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir la foto");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error al subir la foto"));
         }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
