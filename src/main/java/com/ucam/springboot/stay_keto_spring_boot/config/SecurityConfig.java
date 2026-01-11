@@ -45,6 +45,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         // ENDPOINTS PÚBLICOS
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/images/**", "/food/**", "/uploads/**").permitAll()
+                        .requestMatchers("/health").permitAll()
 
                         // ENDPOINTS PROTEGIDOS
                         .requestMatchers("/api/habit/**").authenticated()
