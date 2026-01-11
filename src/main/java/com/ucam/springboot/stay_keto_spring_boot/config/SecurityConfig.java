@@ -4,7 +4,6 @@ import com.ucam.springboot.stay_keto_spring_boot.filters.JwtAuthenticationFilter
 import com.ucam.springboot.stay_keto_spring_boot.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -35,16 +35,18 @@ public class SecurityConfig implements WebMvcConfigurer {
         this.userDetailsService = userDetailsService;
     }
 
-    // ------------------- Security -------------------
+    // ------------------- Configuración de Seguridad Core -------------------
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                // Activamos CORS usando el bean corsConfigurationSource definido abajo
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         // ENDPOINTS PÚBLICOS
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/images/**", "/food/**", "/uploads/**").permitAll()
+                        .requestMatchers("/health").permitAll()
 
                         // ENDPOINTS PROTEGIDOS
                         .requestMatchers("/api/habit/**").authenticated()
@@ -64,6 +66,42 @@ public class SecurityConfig implements WebMvcConfigurer {
         return http.build();
     }
 
+    // ------------------- Configuración de CORS (Crítico para Netlify) -------------------
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Orígenes permitidos (Netlify y Local)
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://stayketo.netlify.app",
+                "http://localhost:5173"
+        ));
+
+        // Métodos permitidos
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Cabeceras permitidas
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "Cache-Control",
+                "Origin",
+                "Accept",
+                "X-Requested-With"
+        ));
+
+        // Permitir envío de cookies/auth headers
+        configuration.setAllowCredentials(true);
+
+        // Exponer cabeceras si fuera necesario (opcional)
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    // ------------------- Autenticación y Password -------------------
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -82,23 +120,14 @@ public class SecurityConfig implements WebMvcConfigurer {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
     // ------------------- Recursos estáticos -------------------
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Esto sirve las imágenes de /uploads/** directamente desde la carpeta uploads/
+        // Imágenes dentro del proyecto
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("classpath:/static/images/")
+                .setCachePeriod(3600);
+        // Imágenes en carpeta uploads
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/")
                 .setCachePeriod(3600);

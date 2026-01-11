@@ -2,12 +2,11 @@ package com.ucam.springboot.stay_keto_spring_boot.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey; // Importación clave para 2026
 import java.util.Date;
 import java.util.function.Function;
 import java.util.Base64;
@@ -15,17 +14,17 @@ import java.util.Base64;
 @Service
 public class JwtService {
 
-    // Secret key Base64 válida (al menos 256 bits)
+    // Secret key Base64 válida (mínimo 256 bits para HS256)
     private static final String SECRET_KEY = Base64.getEncoder()
             .encodeToString("MiClaveMuySeguraDeAlMenos32Caracteres123456".getBytes());
 
-    // Generar token con email como subject
+    // Generar token (Sintaxis fluida moderna 0.12.x)
     public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24h
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .subject(email) // Antes: setSubject
+                .issuedAt(new Date()) // Antes: setIssuedAt
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24h
+                .signWith(getSigningKey()) // Ya no requiere SignatureAlgorithm.HS256 explícito
                 .compact();
     }
 
@@ -40,13 +39,13 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extraer cualquier claim
+    // Extraer cualquier claim (Sintaxis corregida para evitar errores de compilación)
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+        final Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey()) // Arregla el error de compilación
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token) // Reemplaza a parseClaimsJws
+                .getPayload(); // Reemplaza a getBody
         return claimsResolver.apply(claims);
     }
 
@@ -54,7 +53,8 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    private Key getSigningKey() {
+    // Método corregido: Retorna SecretKey en lugar de Key
+    private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }

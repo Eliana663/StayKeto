@@ -17,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         // Resto de rutas de la API, permitiendo credenciales desde tu frontend
         registry.addMapping("/**")
-                .allowedOriginPatterns("http://localhost:5173") // reemplaza por tu frontend real
+                .allowedOriginPatterns("https://stayketo.netlify.app", "http://localhost:5173")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
