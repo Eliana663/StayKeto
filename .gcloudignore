@@ -1,0 +1,17 @@
+
+target/
+bin/
+out/
+.gradle/
+
+
+.idea/
+.vscode/
+
+
+node_modules/
+dist/
+
+
+*.log
+.git/
