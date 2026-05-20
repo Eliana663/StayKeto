@@ -1,49 +1,49 @@
-StayKeto Java Backend
+# StayKeto - Backend ☕
 
-🚀 Overview
-This is the core RESTful API for StayKeto, a comprehensive nutritional platform. Built with Java Spring Boot, this service manages user authentication, metabolic tracking, and nutritional data persistence.
+## 🇪🇸 Versión en Español
 
-🛠 Tech Stack
-Framework: Spring Boot 3.x
+Esta es la API REST central de **StayKeto**, encargada de la lógica de negocio, autenticación, persistencia de datos y gestión de planes nutricionales. Está desarrollada en **Java** utilizando el framework **Spring Boot**.
 
-Language: Java 17+
+### 🛠️ Tecnologías Utilizadas
+- **Java** (v17 / v21)
+- **Framework:** Spring Boot (Data JPA, Security)
+- **Base de Datos:** PostgreSQL / MySQL
+- **Gestor de Dependencias:** Maven / Gradle
 
-Security: Spring Security & JWT (JSON Web Tokens)
+### 🚀 Configuración y Ejecución Local
 
-Data Access: Spring Data JPA / Hibernate
+1. **Clonar el repositorio y acceder a la rama del backend:**
+   ```bash
+   git clone [https://github.com/tu-usuario/stayketo.git](https://github.com/tu-usuario/stayketo.git)
+   cd stayketo
+   git checkout back
 
-Database: MySQL
+2. Compilar e iniciar la aplicación:
 
-Cloud: Google Cloud Platform (GCP) / Render / Railway (menciona donde lo hayas subido)
+**Maven**:./mvnw spring-boot:run
 
-✨ Key Features
-Secure Authentication: Robust login/signup system using JWT for stateless session management.
+🇬🇧 English Version
+This is the core REST API for StayKeto, handling business logic, authentication, data persistence, and nutritional plan management. It is built with Java using the Spring Boot framework.
 
-Habit Tracking System: CRUD operations for daily habits with user-specific data isolation.
+🛠️ Tech Stack
+Java (v17 / v21)
 
-Nutritional Logic: Business logic for calculating macros and monitoring ketosis states.
+Framework: Spring Boot
 
-Relational Database: Optimized MySQL schema with JPA entities and relationships.
+Database: PostgreSQL / MySQL
 
-CORS Configuration: Securely integrated with the React frontend.
+Build Tool: Maven / Gradle
 
-📂 Project Structure
-Following the N-Layer Architecture:
+🚀 Installation & Local Setup
+Clone the repository and switch to the backend branch:
 
-controller/: REST endpoints and request handling.
+Bash
+git clone [https://github.com/your-username/stayketo.git](https://github.com/your-username/stayketo.git)
+cd stayketo
+git checkout back
 
-service/: Business logic and service interfaces.
-
-repository/: Data access layer (JPA).
-
-model/: Database entities.
-
-security/: JWT filters and security configuration.
-
-🚦 Getting Started
-Prerequisites
-JDK 17 or higher
-
-Maven
-
-MySQL Server
+2. **Build and Run the application:**
+   * Using **Maven**: `./mvnw spring-boot:run`
+     
+   
+   The API server will start running at `http://localhost:8080`.
