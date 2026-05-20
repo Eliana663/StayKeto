@@ -1,49 +1,34 @@
+Markdown
 # StayKeto - Backend ☕
 
 ## 🇪🇸 Versión en Español
 
-Esta es la API REST central de **StayKeto**, encargada de la lógica de negocio, autenticación, persistencia de datos y gestión de planes nutricionales. Está desarrollada en **Java** utilizando el framework **Spring Boot**.
+Esta es la API REST central de **StayKeto**, encargada de la lógica de negocio, autenticación, persistencia de datos y gestión de planes nutricionales. Está desarrollada en **Java** con el framework **Spring Boot** y se encuentra completamente desplegada en la nube.
 
 ### 🛠️ Tecnologías Utilizadas
 - **Java** (v17 / v21)
 - **Framework:** Spring Boot (Data JPA, Security)
-- **Base de Datos:** PostgreSQL / MySQL
-- **Gestor de Dependencias:** Maven / Gradle
+- **Despliegue:** Google Cloud Run (Docker)
 
-### 🚀 Configuración y Ejecución Local
+### 🚀 Entorno de Producción
+La API está disponible públicamente en la siguiente dirección URL:
+`https://stay-keto-470404854796.europe-southwest1.run.app`
 
-1. **Clonar el repositorio y acceder a la rama del backend:**
-   ```bash
-   git clone [https://github.com/tu-usuario/stayketo.git](https://github.com/eliana663/stayketo.git)
-   cd stayketo
-   git checkout back
+*(Nota: Internamente, el contenedor de Cloud Run expone el servicio escuchando en el puerto por defecto de Spring Boot `8080`).*
 
-2. Compilar e iniciar la aplicación:
+---
 
-Gradle: ./gradlew bootRun
+## 🇬🇧 English Version
 
-🇬🇧 English Version
-This is the core REST API for StayKeto, handling business logic, authentication, data persistence, and nutritional plan management. It is built with Java using the Spring Boot framework.
+This is the core REST API for **StayKeto**, handling business logic, authentication, data persistence, and nutritional plan management. It is built with **Java** using the **Spring Boot** framework and is fully deployed to the cloud.
 
-🛠️ Tech Stack
-Java (v17 / v21)
+### 🛠️ Tech Stack
+- **Java** (v17 / v21)
+- **Framework:** Spring Boot
+- **Deployment:** Google Cloud Run (Docker)
 
-Framework: Spring Boot
+### 🚀 Production Environment
+The API is publicly available at the following base URL:
+`https://stay-keto-470404854796.europe-southwest1.run.app`
 
-Database: PostgreSQL / MySQL
-
-Build Tool: Maven / Gradle
-
-🚀 Installation & Local Setup
-Clone the repository and switch to the backend branch:
-
-Bash
-git clone [https://github.com/your-username/stayketo.git](https://github.com/your-username/stayketo.git)
-cd stayketo
-git checkout back
-
-2. **Build and Run the application:**
-   Gradle: ./gradlew bootRun
-     
-   
-   The API server will start running at `http://localhost:8080`.
+*(Note: Internally, the Cloud Run container exposes the service listening on the default Spring Boot port `8080`).*
