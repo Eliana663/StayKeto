@@ -20,7 +20,7 @@ Esta es la API REST central de **StayKeto**, encargada de la lógica de negocio,
 
 2. Compilar e iniciar la aplicación:
 
-**Maven**:./mvnw spring-boot:run
+Gradle: ./gradlew bootRun
 
 🇬🇧 English Version
 This is the core REST API for StayKeto, handling business logic, authentication, data persistence, and nutritional plan management. It is built with Java using the Spring Boot framework.
@@ -43,7 +43,7 @@ cd stayketo
 git checkout back
 
 2. **Build and Run the application:**
-   * Using **Maven**: `./mvnw spring-boot:run`
+   Gradle: ./gradlew bootRun
      
    
    The API server will start running at `http://localhost:8080`.
