@@ -14,7 +14,7 @@ Esta es la API REST central de **StayKeto**, encargada de la lógica de negocio,
 
 1. **Clonar el repositorio y acceder a la rama del backend:**
    ```bash
-   git clone [https://github.com/tu-usuario/stayketo.git](https://github.com/tu-usuario/stayketo.git)
+   git clone [https://github.com/tu-usuario/stayketo.git](https://github.com/eliana663/stayketo.git)
    cd stayketo
    git checkout back
 
